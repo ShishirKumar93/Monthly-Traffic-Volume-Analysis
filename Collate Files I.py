@@ -15,7 +15,7 @@ import datetime
 
 
 # =============================================================================
-# book = xlrd.open_workbook('/Users/MrMndFkr/Desktop/EDA/Project/Datasets/19jultvt.xls')
+# book = xlrd.open_workbook('/Users/MrMndFkr/Desktop/EDA/Monthly-Traffic-Volume-Analysis/Datasets/19jultvt.xls')
 # print(book.nsheets)
 # print(book.sheet_names())
 # first_sheet = book.sheet_by_index(0)
@@ -28,7 +28,7 @@ import datetime
 
 def get_arterial(file_path,category):
     """ 
-    variable path is the path of the xls workbook and category is "rural" / "urban",  
+    variable path is the path of the xls workbook and category is "rural" / "urban" / "all",  
     returns dataframe containing the values for given category for each state
     """
     book = xlrd.open_workbook(file_path)
@@ -43,8 +43,10 @@ def get_arterial(file_path,category):
     try:
         if category.lower() == "rural":
             index = 3
-        else:
+        elif category.lower() == "urban":
             index = 4
+        else:
+            index = 5
         sheet = book.sheet_by_index(index)
         list_states = sheet.col_values(0)
         xstart = list_states.index('Connecticut')
@@ -82,8 +84,6 @@ def get_arterial(file_path,category):
 # print(monthid1, monthid2)
 # =============================================================================
 
-
-
 ## get all the files
 def filelist(root):
     """Return a fully-qualified list of filenames under root directory"""
@@ -93,7 +93,7 @@ def filelist(root):
             allfiles.append(os.path.join(path, name))
     return allfiles
     
-file_list = filelist('/Users/MrMndFkr/Desktop/EDA/Project/Datasets')
+file_list = filelist('/Users/MrMndFkr/Desktop/EDA/Monthly-Traffic-Volume-Analysis/Datasets')
 for idx, item in enumerate(file_list):
     if item.find('.DS_Store') > 0:
         print(idx) ## get idx of that unwanted file
@@ -110,28 +110,35 @@ for file in file_list:
     try:
         df1 = get_arterial(file,"Rural")
         df2 = get_arterial(file,"Urban")
-        df_final = pd.merge(df1,df2, how = 'inner', on = 'State')
-        assert df_final.shape[0] == df1.shape[0]
-        assert df_final.shape[0] == df2.shape[0]
+        df3 = get_arterial(file,"All")
+        df_temp = pd.merge(df1,df2, how = 'inner', on = 'State')
+        df_final = pd.merge(df_temp,df3, how = 'inner', on = 'State')
+        assert df_final.shape[0] == df3.shape[0]
+        assert df_final.shape[0] == df_temp.shape[0]
     except:
         print('error encountered at ' + os.path.basename(file))
 
 ## Merging these dataframes
 df1 = get_arterial(file_list[0],"Rural")
 df2 = get_arterial(file_list[0],"Urban")
-df_final = pd.merge(df1,df2, how = 'inner', on = 'State')
+df3 = get_arterial(file,"All")
+df_temp = pd.merge(df1,df2, how = 'inner', on = 'State')
+df_final = pd.merge(df_temp,df3, how = 'inner', on = 'State')
 for file in file_list[1:]:
     try:
         df1 = get_arterial(file,"Rural")
         df2 = get_arterial(file,"Urban")
+        df3 = get_arterial(file,"All")
         df_temp = pd.merge(df1,df2, how = 'inner', on = 'State')
-        df_final = pd.merge(df_final,df_temp, how = 'inner', on = 'State')
+        df_temp2 = pd.merge(df_temp,df3, how = 'inner', on = 'State')
+        df_final = pd.merge(df_final,df_temp2, how = 'inner', on = 'State')
         assert df_final.shape[0] == df_temp.shape[0]
+        assert df_final.shape[0] == df_temp2.shape[0]
     except:
         print('error encountered at ' + os.path.basename(file))
 
 # =============================================================================
-# file = '/Users/MrMndFkr/Desktop/EDA/Project/Datasets/08maytvt.xls'
+# file = '/Users/MrMndFkr/Desktop/EDA/Monthly-Traffic-Volume-Analysis/08maytvt.xls'
 # df1 = get_arterial(file,"Rural")
 # df2 = get_arterial(file,"Urban")
 # df_final = pd.merge(df1,df2, how = 'inner', on = 'State')
