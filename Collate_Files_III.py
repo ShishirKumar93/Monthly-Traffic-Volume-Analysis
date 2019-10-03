@@ -59,12 +59,15 @@ def get_arterial(file_path,category):
         df.columns = ['State', col_name_1, col_name_2 ]
         df[col_name_1].replace('', np.nan, inplace=True) ## removes rows with blank records ( zonal categories)
         df['State'].replace('', np.nan, inplace=True)
+        curr_monthid = str(mydate.strftime("%Y")) + str(mydate.strftime("%m")) ## 200707 for July 2007 file
+        df['data_monthid'] = curr_monthid
         df.dropna(subset=[col_name_1], inplace=True)
         df.dropna(subset=['State'], inplace=True)
         df = df[~df.State.str.contains("subtotal")] ### causes problems on joins, there in most files
         df = df[df.State != "total"] ## causes problems on joins, is there only in specific files
         df['State'] = df.State.str.strip() ## removes leading and lagging white spaces if any
-        return df
+        df2 = pd.melt(df,id_vars=['State','data_monthid'],var_name=['category'], value_name='Million_Vehicle_Miles')
+        return df2
     except:
         print("error in file ",os.path.basename(file_path))
 
@@ -75,13 +78,11 @@ def filelist(root):
     allfiles = []
     for path, subdirs, files in os.walk(root):
         for name in files:
-            allfiles.append(os.path.join(path, name))
+            if name.find("xls") >= 0:
+                allfiles.append(os.path.join(path, name))
     return allfiles
     
-file_list = filelist('/Users/MrMndFkr/Desktop/EDA/Monthly-Traffic-Volume-Analysis/Datasets III')
-for idx, item in enumerate(file_list):
-    if item.find('.DS_Store') > 0:
-        print(idx) ## get idx of that unwanted file
+file_list = filelist('/Users/MrMndFkr/Desktop/Monthly-Traffic-Volume-Analysis/Datasets_III')
 
 ### check function get_arterial and inner joins for Dataset 1
 for file in file_list:
@@ -89,10 +90,11 @@ for file in file_list:
         df1 = get_arterial(file,"Rural")
         df2 = get_arterial(file,"Urban")
         df3 = get_arterial(file,"All")
-        df_temp = pd.merge(df1,df2, how = 'inner', on = 'State')
-        df_final = pd.merge(df_temp,df3, how = 'inner', on = 'State')
-        assert df_final.shape[0] == df3.shape[0]
-        assert df_final.shape[0] == df_temp.shape[0]
+        df_final = pd.concat([df1,df2,df3], axis = 0)
+        #df_temp = pd.merge(df1,df2, how = 'inner', on = 'State')
+        #df_final = pd.merge(df_temp,df3, how = 'inner', on = 'State')
+        #assert df_final.shape[0] == df3.shape[0]
+        #assert df_final.shape[0] == df_temp.shape[0]
     except:
         print('error encountered at ' + os.path.basename(file))
 
@@ -100,17 +102,34 @@ for file in file_list:
 df1 = get_arterial(file_list[0],"Rural")
 df2 = get_arterial(file_list[0],"Urban")
 df3 = get_arterial(file,"All")
-df_temp = pd.merge(df1,df2, how = 'inner', on = 'State')
-df_final = pd.merge(df_temp,df3, how = 'inner', on = 'State')
+df_final = pd.concat([df1,df2,df3], axis = 0)
+#df_temp = pd.merge(df1,df2, how = 'inner', on = 'State')
+#df_final = pd.merge(df_temp,df3, how = 'inner', on = 'State')
 for file in file_list[1:]:
     try:
         df1 = get_arterial(file,"Rural")
         df2 = get_arterial(file,"Urban")
         df3 = get_arterial(file,"All")
-        df_temp = pd.merge(df1,df2, how = 'inner', on = 'State')
-        df_temp2 = pd.merge(df_temp,df3, how = 'inner', on = 'State')
-        df_final = pd.merge(df_final,df_temp2, how = 'inner', on = 'State')
-        assert df_final.shape[0] == df_temp.shape[0]
-        assert df_final.shape[0] == df_temp2.shape[0]
+        df_final = pd.concat([df_final,df1,df2,df3], axis = 0)
+        #df_temp = pd.merge(df1,df2, how = 'inner', on = 'State')
+        #df_temp2 = pd.merge(df_temp,df3, how = 'inner', on = 'State')
+        #df_final = pd.merge(df_final,df_temp2, how = 'inner', on = 'State')
+        #assert df_final.shape[0] == df_temp.shape[0]
+        #assert df_final.shape[0] == df_temp2.shape[0]
     except:
         print('error encountered at ' + os.path.basename(file))
+        
+## get complete view of dataset
+pd.set_option('display.max_rows', 500)
+pd.set_option('display.max_columns', 500)
+pd.set_option('display.width', 1000)
+
+## get different column for category
+df_final.loc[df_final.category.str.find("Rural") >= 0,'area'] = 'rural'
+df_final.loc[df_final.category.str.find("Urban") >= 0,'area'] = 'urban'
+df_final.loc[df_final.category.str.find("All") >= 0,'area'] = 'all'
+df_final.iloc[0:10,]
+
+## get different column for monthid
+df_final['monthid'] = df_final.category.str[-6:]
+df_final.iloc[0:10,]
