@@ -102,7 +102,7 @@ for file in file_list:
 df1 = get_arterial(file_list[0],"Rural")
 df2 = get_arterial(file_list[0],"Urban")
 df3 = get_arterial(file,"All")
-df_final = pd.concat([df1,df2,df3], axis = 0)
+df_final2 = pd.concat([df1,df2,df3], axis = 0)
 #df_temp = pd.merge(df1,df2, how = 'inner', on = 'State')
 #df_final = pd.merge(df_temp,df3, how = 'inner', on = 'State')
 for file in file_list[1:]:
@@ -110,7 +110,7 @@ for file in file_list[1:]:
         df1 = get_arterial(file,"Rural")
         df2 = get_arterial(file,"Urban")
         df3 = get_arterial(file,"All")
-        df_final = pd.concat([df_final,df1,df2,df3], axis = 0)
+        df_final2 = pd.concat([df_final,df1,df2,df3], axis = 0)
         #df_temp = pd.merge(df1,df2, how = 'inner', on = 'State')
         #df_temp2 = pd.merge(df_temp,df3, how = 'inner', on = 'State')
         #df_final = pd.merge(df_final,df_temp2, how = 'inner', on = 'State')
