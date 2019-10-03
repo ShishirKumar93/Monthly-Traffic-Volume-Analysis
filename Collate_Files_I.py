@@ -37,7 +37,7 @@ def get_arterial(file_path,category):
     Month = strptime(file_name[2:5],'%b').tm_mon ## gets month no
     mydate = datetime.date(int(year),Month, 1) ## first day of the month and year
     mydate_1 = mydate - datetime.timedelta(days=1) ## interested in last month of this year as data corresponds to last month and same year
-    mydate_2 = mydate - datetime.timedelta(days=366) ## interested in last month of last year as data corresponds to last month and last year 
+    mydate_2 = mydate - datetime.timedelta(days=368) ## interested in last month of last year as data corresponds to last month and last year 
     monthid1 = str(mydate_1.strftime("%Y")) + str(mydate_1.strftime("%m")) ## 200706 for July 2007 file
     monthid2 = str(mydate_2.strftime("%Y")) + str(mydate_2.strftime("%m")) ## 200606 for July 2007 file
     try:
@@ -99,6 +99,7 @@ def filelist(root):
     
 file_list = filelist('/Users/MrMndFkr/Desktop/Monthly-Traffic-Volume-Analysis/Datasets')
 
+
 ### check function get_arterial and append dataframes for Dataset 1
 for file in file_list:
     try:
@@ -153,7 +154,7 @@ def get_arterial(file_path,category):
     Month = strptime(file_name[2:5],'%b').tm_mon ## gets month no
     mydate = datetime.date(int(year),Month, 1) ## first day of the month and year
     mydate_1 = mydate - datetime.timedelta(days=1) ## interested in last month of this year as data corresponds to last month and same year
-    mydate_2 = mydate - datetime.timedelta(days=366) ## interested in last month of last year as data corresponds to last month and last year 
+    mydate_2 = mydate - datetime.timedelta(days=368) ## interested in last month of last year as data corresponds to last month and last year 
     monthid1 = str(mydate_1.strftime("%Y")) + str(mydate_1.strftime("%m")) ## 200706 for July 2007 file
     monthid2 = str(mydate_2.strftime("%Y")) + str(mydate_2.strftime("%m")) ## 200606 for July 2007 file
     try:
@@ -219,12 +220,19 @@ for file in file_list[1:]:
 df_final.loc[df_final.category.str.find("Rural") >= 0,'area'] = 'rural'
 df_final.loc[df_final.category.str.find("Urban") >= 0,'area'] = 'urban'
 df_final.loc[df_final.category.str.find("All") >= 0,'area'] = 'all'
-df_final.iloc[0:10,]
+#df_final.iloc[0:10,]
 
 ## get different column for monthid
 df_final['monthid'] = df_final.category.str[-6:]
-df_final.iloc[0:10,]
+#df_final.iloc[0:10,]
 
+## QC - check dups
+QC = df_final.groupby(['State','monthid','category']).agg({'Million_Vehicle_Miles':['count']}).reset_index()
+QC.columns = ['State','monthid','category','value']
+QC.iloc[0:10,]
+QC.loc[(QC.value > 1)]
+
+## save it to disk
 df_final.to_csv("/Users/MrMndFkr/Desktop/Monthly-Traffic-Volume-Analysis/data_reshaped.csv")
 
 
