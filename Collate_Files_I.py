@@ -38,7 +38,7 @@ def get_arterial(file_path,category):
     mydate = datetime.date(int(year),Month, 1) ## first day of the month and year
     mydate_1 = mydate - datetime.timedelta(days=1) ## interested in last month of this year as data corresponds to last month and same year
     mydate_2 = mydate - datetime.timedelta(days=368) ## interested in last month of last year as data corresponds to last month and last year 
-    monthid1 = str(mydate_1.strftime("%Y")) + str(mydate_1.strftime("%m")) ## 200706 for July 2007 file
+    #monthid1 = str(mydate_1.strftime("%Y")) + str(mydate_1.strftime("%m")) ## 200706 for July 2007 file
     monthid2 = str(mydate_2.strftime("%Y")) + str(mydate_2.strftime("%m")) ## 200606 for July 2007 file
     try:
         if category.lower() == "rural":
@@ -119,7 +119,6 @@ pd.set_option('display.max_rows', 500)
 pd.set_option('display.max_columns', 500)
 pd.set_option('display.width', 1000)
 
-
 ## appending these dataframes
 df1 = get_arterial(file_list[0],"Rural")
 df2 = get_arterial(file_list[0],"Urban")
@@ -153,9 +152,9 @@ def get_arterial(file_path,category):
     year = str(20) + "".join([str(s) for s in file_name if s.isdigit()]) ## gets the year from filename
     Month = strptime(file_name[2:5],'%b').tm_mon ## gets month no
     mydate = datetime.date(int(year),Month, 1) ## first day of the month and year
-    mydate_1 = mydate - datetime.timedelta(days=1) ## interested in last month of this year as data corresponds to last month and same year
+    #mydate_1 = mydate - datetime.timedelta(days=1) ## interested in last month of this year as data corresponds to last month and same year
     mydate_2 = mydate - datetime.timedelta(days=368) ## interested in last month of last year as data corresponds to last month and last year 
-    monthid1 = str(mydate_1.strftime("%Y")) + str(mydate_1.strftime("%m")) ## 200706 for July 2007 file
+    #monthid1 = str(mydate_1.strftime("%Y")) + str(mydate_1.strftime("%m")) ## 200706 for July 2007 file
     monthid2 = str(mydate_2.strftime("%Y")) + str(mydate_2.strftime("%m")) ## 200606 for July 2007 file
     try:
         if category.lower() == "rural":
