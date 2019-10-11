@@ -141,7 +141,7 @@ for file in file_list[1:]:
         print('error encountered at ' + os.path.basename(file))
 
 
-## only change is that the values are in cols 7 and 8 ( in Dataset I, they are in cols 9 and 10)
+## only change is that the values are in cols 7 and 8 for Dataset III ( in Dataset I, they are in cols 9 and 10)
 def get_arterial(file_path,category):
     """ 
     variable path is the path of the xls workbook and category is "rural" / "urban" / "all",  
