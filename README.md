@@ -16,9 +16,11 @@ Files:
 2) Region Wise I : graph highlighting the effect of economic crisis on different regions
 3) Region Wise II : graph highlighting the growth post economic crisis in different regions
 4) Urban Vs Rural : graph highlighting the changes in rural and urban traffic post Hurricane Katrina
+5) EDA_PROJ_KA_SK_v3 : presentation covering our analysis
 
 Codes:
 1) Collate_files_I : function to collate all the data from different xls files
 2) Graphs : notebook for aggregating data and generating graphs
+3) Graphs 2: pdf of notebook for generating rest of the graphs ( by Kamron)
 
 
