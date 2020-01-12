@@ -26,4 +26,4 @@ Codes:
 2) Graphs : notebook for aggregating data and generating graphs
 3) Graphs 2: pdf of notebook for generating rest of the graphs (contributed by Kamron Afshar)
 
-
+Thanks to Prof. [Paul Intrevado](https://github.com/paulintrevado) for his guidance and support in this school project.
