@@ -24,6 +24,6 @@ Files:
 Codes:
 1) Collate_files_I : function to collate all the data from different xls files
 2) Graphs : notebook for aggregating data and generating graphs
-3) Graphs 2: pdf of notebook for generating rest of the graphs (contributed by Kamron Afshar)
+3) Graphs 2: pdf of notebook for generating rest of the graphs (contributed by [Kamron Afshar](https://github.com/kjafshar))
 
 Thanks to Prof. [Paul Intrevado](https://github.com/paulintrevado) for his guidance and support in this school project.
